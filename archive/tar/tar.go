@@ -7,13 +7,15 @@ import (
 	"archive/tar"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 	"time"
 
-	log "github.com/sirupsen/logrus"
 	"github.com/drone/drone-cache-lib/archive"
+	log "github.com/sirupsen/logrus"
 )
 
 type tarArchive struct{}
@@ -27,9 +29,34 @@ func (a *tarArchive) Pack(srcs []string, w io.Writer) error {
 	tw := tar.NewWriter(w)
 	defer tw.Close()
 
+	newSrcs := []string{}
+	for _, oldS := range srcs {
+		if strings.Contains(oldS, "/*/") && len(strings.Split(oldS, "/*/")) == 2 {
+			rootFolder := strings.Split(oldS, "/*/")[0]
+			suffixString := strings.Split(oldS, "/*/")[1]
+			if rootInfo, err := os.Stat(rootFolder); err == nil {
+				if rootInfo.IsDir() {
+					rootFiles, err := ioutil.ReadDir(rootFolder)
+					if err == nil {
+						for _, rootF := range rootFiles {
+							if rootF.IsDir() {
+								suffixFolder := path.Join(rootF.Name(), suffixString)
+								if _, err := os.Stat(suffixFolder); err == nil {
+									newSrcs = append(newSrcs, suffixFolder)
+								}
+							}
+						}
+					}
+				}
+			}
+		} else {
+			newSrcs = append(newSrcs, oldS)
+		}
+	}
+
 	// Loop through each source
 	var fwErr error
-	for _, s := range srcs {
+	for _, s := range newSrcs {
 		// ensure the src actually exists before trying to tar it
 		if _, err := os.Stat(s); err != nil {
 			return err
