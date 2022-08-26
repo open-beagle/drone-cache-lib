@@ -1,6 +1,6 @@
 # version
 
-<!-- https://github.com/drone/drone-yaml -->
+<!-- https://github.com/drone/drone-cache-lib -->
 
 ```bash
 git remote add upstream git@github.com:drone/drone-cache-lib.git
@@ -21,4 +21,10 @@ git push -f origin v1.0.0-beagle.0
 
 # 删除本地Tag
 git tag -d v1.0.0-beagle.0
+```
+
+## debug
+
+```bash
+go vet ./...
 ```
