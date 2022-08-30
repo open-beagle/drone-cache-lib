@@ -200,7 +200,7 @@ func createMountContent() {
 	// Write files and their content
 	var err error
 	for _, element := range mountFiles {
-		path := "/tmp/fixtures/mounts/"+element.Path
+		path := "/tmp/fixtures/mounts/" + element.Path
 
 		err = ioutil.WriteFile(path, []byte(element.Content), 0644)
 		if err != nil {
@@ -232,6 +232,9 @@ func createDirectories() {
 	directories := []string{
 		"/tmp/fixtures/tarfiles",
 		"/tmp/fixtures/mounts/subdir",
+		"/tmp/fixtures/mounts/t0dir",
+		"/tmp/fixtures/mounts/z0dir/node_modules",
+		"/tmp/fixtures/mounts/z1dir/node_modules",
 		"/tmp/extracted",
 	}
 
@@ -262,11 +265,14 @@ var (
 	mountFiles = []mountFile{
 		{Path: "test.txt", Content: "hello\ngo\n"},
 		{Path: "subdir/test2.txt", Content: "hello2\ngo\n"},
+		{Path: "z0dir/node_modules/test2.txt", Content: "hello2\ngo\n"},
+		{Path: "z1dir/node_modules/test2.txt", Content: "hello2\ngo\n"},
 	}
 
 	validMount = []string{
 		"test.txt",
 		"subdir",
+		"./*/node_modules",
 	}
 
 	validFile   = "/tmp/fixtures/tarfiles/test.tar"

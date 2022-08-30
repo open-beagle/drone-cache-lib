@@ -31,9 +31,9 @@ func (a *tarArchive) Pack(srcs []string, w io.Writer) error {
 
 	newSrcs := []string{}
 	for _, oldS := range srcs {
-		if strings.Contains(oldS, "/*/") && len(strings.Split(oldS, "/*/")) == 2 {
-			rootFolder := strings.Split(oldS, "/*/")[0]
-			suffixString := strings.Split(oldS, "/*/")[1]
+		if strings.Contains(oldS, "*/") && len(strings.Split(oldS, "*/")) == 2 {
+			rootFolder := strings.Split(oldS, "*/")[0]
+			suffixString := strings.Split(oldS, "*/")[1]
 			if rootInfo, err := os.Stat(rootFolder); err == nil {
 				if rootInfo.IsDir() {
 					rootFiles, err := ioutil.ReadDir(rootFolder)
