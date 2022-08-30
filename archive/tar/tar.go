@@ -40,7 +40,7 @@ func (a *tarArchive) Pack(srcs []string, w io.Writer) error {
 					if err == nil {
 						for _, rootF := range rootFiles {
 							if rootF.IsDir() {
-								suffixFolder := path.Join(rootF.Name(), suffixString)
+								suffixFolder := path.Join(rootFolder, rootF.Name(), suffixString)
 								if _, err := os.Stat(suffixFolder); err == nil {
 									newSrcs = append(newSrcs, suffixFolder)
 								}
