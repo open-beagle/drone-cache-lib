@@ -10,7 +10,20 @@ git fetch upstream
 git merge master
 ```
 
-## realse
+## master
+
+```bash
+# 新建一个Tag
+git tag v1.0.0
+
+# 推送一个Tag ，-f 强制更新
+git push -f origin v1.0.0
+
+# 删除本地Tag
+git tag -d v1.0.0
+```
+
+## dev
 
 ```bash
 # 新建一个Tag
