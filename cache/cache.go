@@ -2,6 +2,7 @@ package cache
 
 import (
 	"io"
+	"strings"
 
 	"github.com/drone/drone-cache-lib/archive"
 	"github.com/drone/drone-cache-lib/archive/tar"
@@ -45,6 +46,14 @@ func (c Cache) Restore(src string, fallback string, rootback string) error {
 		err = restoreCache(rootback, c.s, c.a)
 	}
 
+	if err != nil && len(rootback) > 0 {
+		rootbackArray := strings.Split(rootback, "/")
+		if len(rootbackArray) == 6 {
+			back := strings.Join(RemoveIndex(rootbackArray, 2), "/")
+			err = restoreCache(back, c.s, c.a)
+		}
+	}
+
 	// Cache plugin should print an error but it should not return it
 	// this is so the build continues even if the cache cant be restored
 	if err != nil {
@@ -52,6 +61,10 @@ func (c Cache) Restore(src string, fallback string, rootback string) error {
 	}
 
 	return nil
+}
+
+func RemoveIndex(s []string, index int) []string {
+	return append(s[:index], s[index+1:]...)
 }
 
 func restoreCache(src string, s storage.Storage, a archive.Archive) error {
