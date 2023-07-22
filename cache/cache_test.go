@@ -69,7 +69,7 @@ func TestCache(t *testing.T) {
 				c := NewDefault(s)
 				g.Assert(err == nil).IsTrue("failed to create cache")
 
-				err = c.Restore("fixtures/test.tar", "")
+				err = c.Restore("fixtures/test.tar", "", "")
 				if err != nil {
 					fmt.Printf("Received unexpected error: %s\n", err)
 				}
@@ -83,7 +83,7 @@ func TestCache(t *testing.T) {
 				c := NewDefault(s)
 				g.Assert(err == nil).IsTrue("failed to create cache")
 
-				err = c.Restore("fixtures/test2.tar", "fixtures/test.tar")
+				err = c.Restore("fixtures/test2.tar", "fixtures/test.tar", "")
 				if err != nil {
 					fmt.Printf("Received unexpected error: %s\n", err)
 				}
@@ -97,7 +97,7 @@ func TestCache(t *testing.T) {
 				c := NewDefault(s)
 				g.Assert(err == nil).IsTrue("failed to create cache")
 
-				err = c.Restore("fixtures/test2.tar", "")
+				err = c.Restore("fixtures/test2.tar", "", "")
 				g.Assert(err == nil).IsTrue("should not have returned error on missing file")
 			})
 		})

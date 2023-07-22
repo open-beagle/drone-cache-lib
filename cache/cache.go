@@ -3,10 +3,10 @@ package cache
 import (
 	"io"
 
-	log "github.com/sirupsen/logrus"
 	"github.com/drone/drone-cache-lib/archive"
 	"github.com/drone/drone-cache-lib/archive/tar"
 	"github.com/drone/drone-cache-lib/storage"
+	log "github.com/sirupsen/logrus"
 )
 
 // Cache defines a basic cache object.
@@ -32,12 +32,17 @@ func (c Cache) Rebuild(srcs []string, dst string) error {
 }
 
 // Restore restores the existing cache.
-func (c Cache) Restore(src string, fallback string) error {
+func (c Cache) Restore(src string, fallback string, rootback string) error {
 	err := restoreCache(src, c.s, c.a)
 
 	if err != nil && fallback != "" && fallback != src {
 		log.Warnf("Failed to retrieve %s, trying %s", src, fallback)
 		err = restoreCache(fallback, c.s, c.a)
+	}
+
+	if err != nil && rootback != "" && rootback != src {
+		log.Warnf("Failed to retrieve %s, trying %s", src, rootback)
+		err = restoreCache(rootback, c.s, c.a)
 	}
 
 	// Cache plugin should print an error but it should not return it
